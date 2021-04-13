@@ -1,0 +1,6 @@
+with open('24-1.txt') as file:
+    data = list(map(int, re.findall(r'\d+', file.read())))
+    for i in range(len(data)-2):
+      if data[i] == 'A' and data[i+2] == 'R':
+        count += 1
+    print(count)
