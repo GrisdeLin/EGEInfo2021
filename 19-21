@@ -1,0 +1,52 @@
+first_kucha = 13  #число камней первая куча
+win_number = 107  #необходимое для победы число камней
+max_second_kucha = 93  #максимальное число камней во второй куче
+
+
+# генератор кучек, создает всевозможные выходы из текущей позиции
+def possibles(first, second):
+    return [(first + 1, second), (first * 2, second), (first, second + 1),
+            (first, second * 2)]
+
+
+# победа, если кучка находится в выигрышной позиции
+def is_winning(heap):
+    return heap[0] + heap[1] >= win_number
+
+
+#победа первым ходом
+def winning_by_first(heap):
+    return any(map(is_winning, possibles(heap[0], heap[1])))
+#победа вторым ходом
+def second_step_win(heap):
+    enemy_entries = possibles(heap[0], heap[1])
+    for entry in enemy_entries:
+        enemy_steps = possibles(entry[0], entry[1])
+        if any(map(is_winning, enemy_steps)):
+            continue
+        if all(map(winning_by_first, enemy_steps)):
+            return True
+    return False
+#19
+for s in range(1, max_second_kucha):
+    entries = possibles(s, first_kucha)
+    if any(map(winning_by_first, entries)):
+        print(s)
+        break
+# 20
+for s in range(1, max_second_kucha):
+    if second_step_win((first_kucha, s)):
+        print(s)
+
+# 21
+for s in range(1, max_second_kucha):
+    flag = 1
+    second_entries = possibles(first_kucha, s)
+    if all(map(winning_by_first, second_entries)):
+        continue
+    for _entry in second_entries:
+        if not winning_by_first(_entry) and not second_step_win(_entry):
+            flag = 0
+            break
+    if flag:
+        print(s)
